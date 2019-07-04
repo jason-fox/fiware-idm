@@ -22,7 +22,9 @@
     "prettier": "prettier --single-quote --trailing-comma es5 --write **/*.js *.js",
     "prettier:text": "prettier '*.md' '**/*.md' 'extras/docker/*.md'  --tab-width 4 --print-width 80 --write --prose-wrap always",
     "test:coverage": "istanbul cover _mocha -- --recursive 'test/**/*.js' --reporter spec --exit",
-    "test:coveralls": "npm run test:coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
+    "test:coveralls": "npm run test:coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -70,7 +72,8 @@
     "xml-encryption": "^0.11.0",
     "xml2js": "^0.4.0",
     "xmlbuilder": "~2.2.0",
-    "xmldom": "^0.1.0"
+    "xmldom": "^0.1.0",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "chai": "3.5.0",
@@ -125,5 +128,6 @@
     "plugins": [
       "remark-preset-lint-recommended"
     ]
-  }
+  },
+  "snyk": true
 }
