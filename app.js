@@ -21,10 +21,6 @@ const config = config_service.get_config();
 
 // Create vars that store routes
 const index = require('./routes/web/index');
-const api = require('./routes/api/index');
-const oauth2 = require('./routes/oauth2/oauth2');
-const saml2 = require('./routes/saml2/saml2');
-const authregistry = require('./routes/authregistry/authregistry');
 
 const app = express();
 const helmet = require('helmet');
@@ -173,40 +169,9 @@ if (config.https.enabled) {
     sslRequiredMessage: 'SSL Required.' // eslint-disable-line snakecase/snakecase
   });
 
-  // Set routes for api
-  app.use('/v1', force_ssl, api);
-  app.use('/v3', force_ssl, api); // REDIRECT OLD KEYSTONE REQUESTS TO THE SAME API
-
-  // Set routes for oauth2
-  app.use('/oauth2', force_ssl, oauth2);
-  app.get('/user', force_ssl, require('./controllers/oauth2/oauth2').authenticate_token);
-
-  // Set routes for saml2
-  app.use('/saml2', force_ssl, saml2);
-
-  // Set routes for the authorization registry if enabled
-  if (config.ar.url === "internal") {
-    app.use('/ar', authregistry);
-  }
-
   // Set routes for GUI
   app.use('/', force_ssl, index);
 } else {
-  // Set routes for api
-  app.use('/v1', api);
-  app.use('/v3', api); // REDIRECT OLD KEYSTONE REQUESTS TO THE SAME API
-
-  // Set routes for oauth2
-  app.use('/oauth2', oauth2);
-  app.get('/user', require('./controllers/oauth2/oauth2').authenticate_token);
-
-  // Set routes for saml2
-  app.use('/saml2', saml2);
-
-  // Set routes for the authorization registry if enabled
-  if (config.ar.url === "internal") {
-    app.use('/ar', authregistry);
-  }
 
   // Set routes for GUI
   app.use('/', index);
