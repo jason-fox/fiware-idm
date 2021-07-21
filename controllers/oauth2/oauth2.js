@@ -4,13 +4,13 @@ const config_service = require('../../lib/configService.js');
 const config_eidas = config_service.get_config().eidas;
 const config_oauth2 = config_service.get_config().oauth2;
 const config_oidc = config_service.get_config().oidc;
-const user_controller = require('../../controllers/web/users');
 const OauthServer = require('oauth2-server'); //eslint-disable-line snakecase/snakecase
 const gravatar = require('gravatar');
 const jsonwebtoken = require('jsonwebtoken');
 const url = require('url');
 const Request = OauthServer.Request;
 const Response = OauthServer.Response;
+const Authentication = require('./authentication');
 
 const debug = require('debug')('idm:oauth_controller');
 
@@ -19,6 +19,10 @@ const oauth_server = new OauthServer({
   model: require('../../models/model_oauth_server.js'),
   debug: true
 });
+
+
+
+
 
 // POST /oauth2/token -- Function to handle token requests
 exports.token = function (req, res) {
@@ -181,7 +185,7 @@ exports.authenticate_user = function (req, res, next) {
 
     // If not, authenticate and search if user is authorized in the application
     if (req.body.email && req.body.password) {
-      user_controller.authenticate(req.body.email, req.body.password, function (error, user) {
+      Authentication.driver(req.body.email, req.body.password, function (error, user) {
         if (error) {
           // If error, send message to the icoming path
           req.session.errors = [error.message ? error.message : ''];
